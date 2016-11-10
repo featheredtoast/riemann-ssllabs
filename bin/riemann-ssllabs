@@ -43,7 +43,7 @@ class Riemann::Tools::Ssllabs
       else 0
       end
 
-    puts "numeric grade: " + numeric_grade
+    puts "numeric grade: " + numeric_grade.to_s
         
     data = {
       :host    => opts[:ssllab_host],
