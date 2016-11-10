@@ -53,13 +53,13 @@ class Riemann::Tools::Ssllabs
     }
 
     data[:state] = 
-      case grade
-      when /^[DF]/
-        "critical"
-      when /^C/
+      case data[:metric]
+      when 4
+        "ok"
+      when 2 .. 3
         "warning"
       else
-	"ok"
+        "critical"
       end
 
     report(data)
