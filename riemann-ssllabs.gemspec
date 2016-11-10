@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.version = '0.0.1'
   s.author = 'Jeff Wong'
   s.email = 'awole20@gmail.com'
-  s.homepage = ''
+  s.homepage = 'https://github.com/featheredtoast/riemann-ssllabs'
   s.platform = Gem::Platform::RUBY
   s.summary = 'Send ssllab grade to riemann'
 
