@@ -18,15 +18,12 @@ class Riemann::Tools::Ssllabs
   end
 
   def tick
-    puts "hi"
     api = ::Ssllabs::Api.new
     r = api.analyse(host: opts[:ssllab_host], publish: 'off', startNew: 'on')
-    puts JSON.generate(r)
 
     while r.status != "READY" and r.status != "ERROR" do
       sleep(5)
       r = api.analyse(host: opts[:ssllab_host], publish: 'off')
-      puts JSON.generate(r)
     end
     
     data = {
