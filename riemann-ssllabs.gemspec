@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.rubyforge_project = 'riemann-ssllabs'
   s.name = 'riemann-ssllabs'
-  s.version = '0.0.4'
+  s.version = '0.0.5'
   s.author = 'Jeff Wong'
   s.email = 'awole20@gmail.com'
   s.homepage = 'https://github.com/featheredtoast/riemann-ssllabs'

@@ -10,7 +10,7 @@ class Riemann::Tools::Ssllabs
   require 'ssllabs'
   require 'json'
 
-  opt :ssllab_host, "ssllab host", :default => 'google.com'
+  opt :ssllabs_host, "ssllabs host", :default => 'google.com'
   
   def initialize
     options[:interval] = 3600
@@ -19,12 +19,12 @@ class Riemann::Tools::Ssllabs
 
   def tick
     api = ::Ssllabs::Api.new
-    r = api.analyse(host: opts[:ssllab_host], publish: 'off', startNew: 'on')
+    r = api.analyse(host: opts[:ssllabs_host], publish: 'off', startNew: 'on')
     puts JSON.generate(r)
 
     while r.status != "READY" and r.status != "ERROR" do
       sleep(5)
-      r = api.analyse(host: opts[:ssllab_host], publish: 'off')
+      r = api.analyse(host: opts[:ssllabs_host], publish: 'off')
       puts JSON.generate(r)
     end
 
@@ -46,7 +46,7 @@ class Riemann::Tools::Ssllabs
     puts "numeric grade: " + numeric_grade.to_s
         
     data = {
-      :host    => opts[:ssllab_host],
+      :host    => opts[:ssllabs_host],
       :service => "ssllab-grade",
       :metric  => numeric_grade,
       :tags    => ['ssllab']
