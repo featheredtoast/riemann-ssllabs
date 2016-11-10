@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+
+# Send ssllab grade to riemann
+
+require 'riemann/tools'
+
+class Riemann::Tools::Ssllabs
+  include Riemann::Tools
+  
+  require 'ssllabs'
+  require 'json'
+
+  opt :ssllab_host, "ssllab host", :default => 'google.com'
+  
+  def initialize
+    options[:interval] = 3600
+    options[:ttl] = 7200
+  end
+
+  def tick
+    puts "hi"
+    api = ::Ssllabs::Api.new
+    r = api.analyse(host: opts[:ssllab_host], publish: 'off', startNew: 'on')
+    puts JSON.generate(r)
+
+    while r.status != "READY" and r.status != "ERROR" do
+      sleep(5)
+      r = api.analyse(host: opts[:ssllab_host], publish: 'off')
+      puts JSON.generate(r)
+    end
+    
+    data = {
+      :host    => opts[:ssllab_host].dup,
+      :service => "ssllab-grade",
+      :metric  => r.grade,
+      :tags    => ['ssllab']
+    }
+
+    data[:state] = 
+      case data[:metric]
+      when /^[DF]/
+        "critical"
+      when /^C/
+        "warning"
+      else
+	"ok"
+      end
+
+    report(data)
+  end
+end
+
+Riemann::Tools::Ssllabs.run
