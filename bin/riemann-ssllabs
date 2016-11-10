@@ -30,21 +30,36 @@ class Riemann::Tools::Ssllabs
 
     grade = r.endpoints[0].grade
     puts "grade: " + grade
-    
+    numeric_grade =
+      case grade
+      when /^A/
+        4
+      when /^B/
+        3
+      when /^C/
+        2
+      when /^D/
+        1
+      else 0
+      end
+
+    puts "numeric grade: " + numeric_grade
+        
     data = {
       :host    => opts[:ssllab_host],
       :service => "ssllab-grade",
-      :state   => grade,
+      :metric  => numeric_grade,
       :tags    => ['ssllab']
     }
 
-    data[:metric] = 
-      case data[:state]
+    data[:state] = 
+      case grade
       when /^[DF]/
-        2
+        "critical"
       when /^C/
-        1
-      else 0
+        "warning"
+      else
+	"ok"
       end
 
     report(data)
