@@ -20,27 +20,31 @@ class Riemann::Tools::Ssllabs
   def tick
     api = ::Ssllabs::Api.new
     r = api.analyse(host: opts[:ssllab_host], publish: 'off', startNew: 'on')
+    puts JSON.generate(r)
 
     while r.status != "READY" and r.status != "ERROR" do
       sleep(5)
       r = api.analyse(host: opts[:ssllab_host], publish: 'off')
+      puts JSON.generate(r)
     end
+
+    grade = r.endpoints[0].grade
+    puts "grade: " + grade
     
     data = {
-      :host    => opts[:ssllab_host].dup,
+      :host    => opts[:ssllab_host],
       :service => "ssllab-grade",
-      :metric  => r.grade,
+      :state   => grade,
       :tags    => ['ssllab']
     }
 
-    data[:state] = 
-      case data[:metric]
+    data[:metric] = 
+      case data[:state]
       when /^[DF]/
-        "critical"
+        2
       when /^C/
-        "warning"
-      else
-	"ok"
+        1
+      else 0
       end
 
     report(data)
