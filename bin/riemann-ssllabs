@@ -47,9 +47,9 @@ class Riemann::Tools::Ssllabs
         
     data = {
       :host    => opts[:ssllabs_host],
-      :service => "ssllab-grade",
+      :service => "ssllabs-grade",
       :metric  => numeric_grade,
-      :tags    => ['ssllab']
+      :tags    => ['ssllabs']
     }
 
     data[:state] = 
